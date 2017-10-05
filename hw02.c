@@ -7,21 +7,25 @@ Prints the sizes and possible ranges of four integer data types.
 void print_int_ranges() {
   // These are made up numbers that will not be correct on most systems!
   // TODO correctly compute these values! 
-  int short_bytes = 2, int_bytes = 4, uint_bytes = 4, long_bytes = 4;
-
-  long  short_min = -32768,       short_max = 32767;
-  long  int_min   = -2147483648L, int_max   = 2147483647L;
-  long  uint_min  = 0,            uint_max  = 1 << (int_bytes * 8 - 1);
-  long  long_min  = -2147483648L, long_max  = 2147483647L;
+  int short_bytes = sizeof(short), int_bytes = sizeof(int), long_bytes = sizeof(long), uint_bytes = sizeof(int);
+ 
+  long long_min, long_max;
+  short short_min, short_max;
+  int int_min, int_max;
+  unsigned int uint_min, uint_max;
+  short_min =  1 << (short_bytes*8-1);      short_max = ~short_min;
+  int_min   =  1 << (int_bytes*8-1);        int_max   = ~int_min;
+  uint_min  =  0;                           uint_max  = (~0) >> 1;
+  long_min  =  1L << (long_bytes*8-1);       long_max  = ~long_min; 
 
   // Keep these exact printf commands :)   
-  printf("short is %d bytes or %d bits and ranges from %ld to %ld\n",
+  printf("short is %d bytes or %d bits and ranges from %d to %d\n",
          short_bytes, short_bytes * 8, short_min, short_max);
-  printf("int is %d bytes or %d bits and ranges from %ld to %ld\n",
+  printf("int is %d bytes or %d bits and ranges from %d to %d\n",
          int_bytes, int_bytes * 8, int_min, int_max);
   printf("long is %d bytes or %d bits and ranges from %ld to %ld\n",
          long_bytes, long_bytes * 8, long_min, long_max);
-  printf("unsigned int is %d bytes or %d bits and ranges from %ld to %ld\n",
+  printf("unsigned int is %d bytes or %d bits and ranges from %u to %u\n",
          uint_bytes, uint_bytes * 8, uint_min, uint_max);
 }
 
@@ -31,16 +35,20 @@ Returns 1 if bit i in value v equals 1
 Returns 0 if bit i in value v equals 0
 */
 int is_bit_set(unsigned char v, unsigned char i) {
-  if (i >= sizeof(unsigned char)) {
+
+  unsigned int mask = 1 << i;
+  
+  if (i >= sizeof(unsigned char ) * 8) {
     fprintf(stderr, "Index out of range!\n");
     return 0;
-  }
+    }
+    else if ((v & mask) > 0) {
+      return 1;
+    }
+    else 
+      return 0;
+    
 
-  /*
-  TODO your implementation goes here!
-  */
-
-  return 0;
 }
 
 /*
